@@ -1,0 +1,23 @@
+.authForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.text-field {
+  font-size: 12px !important;
+  font-family: 'Roboto', sans-serif;
+  .v-field__input {
+    padding: 12px 16px;
+  }
+}
+
+.auth-buttons {
+  display: flex;
+  flex-direction: row;
+
+  .v-col {
+    padding: 12px 0;
+  }
+}
