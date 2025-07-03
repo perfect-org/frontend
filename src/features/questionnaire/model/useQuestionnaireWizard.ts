@@ -16,21 +16,21 @@ export function useQuestionnaireWizard(props: QuestionnaireWizardProps) {
   const { goals, allergies, sendQuestionnaireResults } = props
 
   onMounted(async () => {
-    const goalQuestion = questions.find((q) => q.key === 'goal')
+    const goalQuestion = questions.value.find((q) => q.key === 'goal')
     if (goalQuestion) goalQuestion.options = goals
 
-    const allergyQuestion = questions.find((q) => q.key === 'allergy')
+    const allergyQuestion = questions.value.find((q) => q.key === 'allergy')
     if (allergyQuestion) allergyQuestion.options = allergies
   })
 
   const currentIndex = ref(0)
   const answers = ref<QuestionnaireAnswersObject>({})
   const slideDirection = ref<'left' | 'right'>('left')
-  const questions = reactive(questionsRaw)
+  const questions = ref(questionsRaw)
 
-  const currentQuestion = computed(() => questions[currentIndex.value])
-  const isLast = computed(() => currentIndex.value === questions.length - 1)
-  const progress = computed(() => ((currentIndex.value + 1) / questions.length) * 100)
+  const currentQuestion = computed(() => questions.value[currentIndex.value])
+  const isLast = computed(() => currentIndex.value === questions.value.length - 1)
+  const progress = computed(() => ((currentIndex.value + 1) / questions.value.length) * 100)
   const isRadioChecked = computed(() => {
     const value = answers.value[currentQuestion.value.key]
     return value !== null && value !== undefined
