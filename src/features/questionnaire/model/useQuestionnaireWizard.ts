@@ -1,36 +1,19 @@
-import { ref, computed, onMounted, reactive } from 'vue'
-import { questions as questionsRaw } from '../model/questions'
-import { getGoals } from '../api/getGoals'
-import { getAllergies } from '../api/getAllergies'
-import type { Question, QuestionComponentProps, QuestionnaireAnswersObject } from './types'
-import { sendQuestionnaire } from '../api/sendQuestionnaire'
-import { useMutation, useQuery } from '@tanstack/vue-query'
-import { useRouter } from 'vue-router'
-import { notifyError, notifySuccess } from '@/shared/lib/services/notification.service'
+import { ref, computed, reactive, onMounted, type Ref } from 'vue'
+import type {
+  Question,
+  QuestionComponentProps,
+  QuestionnaireAnswersObject,
+} from '@/entities/questionnaire/model/types'
+import { questions as questionsRaw } from './questions'
 
-export const useQuestionnaire = () => {
-  const router = useRouter()
+interface QuestionnaireWizardProps {
+  goals: Ref<any, any> | Ref<undefined, undefined>
+  allergies: Ref<any, any> | Ref<undefined, undefined>
+  sendQuestionnaireResults: MutateSyncFunction<any, Error, QuestionnaireAnswersObject, unknown>
+}
 
-  const { data: goals } = useQuery<any>({
-    queryFn: getGoals,
-    queryKey: ['goals'],
-  })
-
-  const { data: allergies } = useQuery<any>({
-    queryFn: getAllergies,
-    queryKey: ['allergies'],
-  })
-
-  const { mutate: sendQuestionnaireResults } = useMutation({
-    mutationFn: sendQuestionnaire,
-    onSuccess: (response) => {
-      notifySuccess('Анкета успешно сохранена!')
-    },
-    onError: (error) => {
-      notifyError('Ошибка при отправке анкеты!')
-      console.error('Ошибка при отправке анкеты:', error)
-    },
-  })
+export function useQuestionnaireWizard(props: QuestionnaireWizardProps) {
+  const { goals, allergies, sendQuestionnaireResults } = props
 
   onMounted(async () => {
     const goalQuestion = questions.find((q) => q.key === 'goal')

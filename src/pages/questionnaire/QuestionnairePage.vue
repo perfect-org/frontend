@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import Questionnaire from '@/features/questionnaire/ui/Questionnaire.vue'
+import Questionnaire from '@/entities/questionnaire/ui/Questionnaire.vue'
 </script>
 
 <style lang="scss"></style>
