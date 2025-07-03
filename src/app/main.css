@@ -1,0 +1,9 @@
+html,
+body,
+input,
+input::placeholder {
+  font-family: 'Nunito', sans-serif !important;
+  font-optical-sizing: auto !important;
+  font-weight: 400 !important;
+  font-style: normal !important;
+}
