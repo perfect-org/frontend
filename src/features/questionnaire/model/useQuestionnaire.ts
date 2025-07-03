@@ -6,6 +6,7 @@ import type { Question, QuestionComponentProps, QuestionnaireAnswersObject } fro
 import { sendQuestionnaire } from '../api/sendQuestionnaire'
 import { useMutation, useQuery } from '@tanstack/vue-query'
 import { useRouter } from 'vue-router'
+import { notifyError, notifySuccess } from '@/shared/lib/services/notification.service'
 
 export const useQuestionnaire = () => {
   const router = useRouter()
@@ -23,9 +24,10 @@ export const useQuestionnaire = () => {
   const { mutate: sendQuestionnaireResults } = useMutation({
     mutationFn: sendQuestionnaire,
     onSuccess: (response) => {
-      console.log('Анкета успешно сохранена!')
+      notifySuccess('Анкета успешно сохранена!')
     },
     onError: (error) => {
+      notifyError('Ошибка при отправке анкеты!')
       console.error('Ошибка при отправке анкеты:', error)
     },
   })
