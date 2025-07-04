@@ -48,6 +48,7 @@ export const useQuestionnaire = () => {
       error: error.value,
     }),
     ({ questionnaire }) => {
+      console.log(questionnaire)
       if (questionnaire) {
         router.replace('/catalog')
       }

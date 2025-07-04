@@ -7,6 +7,7 @@
       :allergies="allergies"
       :sendQuestionnaireResults="sendQuestionnaireResults"
     />
+    <div v-else>Извините, пока нет данных для анкеты :(</div>
   </v-card>
 </template>
 

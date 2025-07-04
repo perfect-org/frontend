@@ -3,6 +3,6 @@ import { API_URL } from '@/shared/api/basePaths'
 import type { QuestionnaireAnswersObject } from '../model/types'
 
 export const sendQuestionnaire = async (answers: QuestionnaireAnswersObject) => {
-  const response = await axiosInstance.post(`${API_URL}/user_form/create/form`, answers)
+  const response = await axiosInstance.post(`${API_URL}/user_form/m`, answers)
   return response.data
 }
