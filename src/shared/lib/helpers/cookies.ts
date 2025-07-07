@@ -24,8 +24,7 @@ export const cookiesApi = {
     }
   },
   setUserCookie: (user: UserObject) => {
-    const validatedUser = validateUploads(user)
-    Cookies.set('user', JSON.stringify(validatedUser), COOKIE_OPTIONS)
+    Cookies.set('user', user, COOKIE_OPTIONS)
   },
   setTokensCookie: (tokens: TokensObject) => {
     Cookies.set('access_token', tokens.access_token)
