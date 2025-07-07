@@ -3,8 +3,11 @@
     <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
     <v-app-bar-title>VitaminBox</v-app-bar-title>
     <CartPreviewMenu />
-    <v-btn icon>
+    <v-btn icon :to="{ path: 'admin' }" exact>
       <v-icon>mdi-shield-account</v-icon>
+    </v-btn>
+    <v-btn icon :to="{ path: 'profile' }" exact>
+      <v-icon>mdi-account</v-icon>
     </v-btn>
   </v-app-bar>
   <ProfileDrawer :drawer="drawer" @update:drawer="drawer = $event" />
