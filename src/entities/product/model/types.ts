@@ -9,7 +9,8 @@ export type ProductListParams = {
   limit: number
 }
 
-export type Product = {
+export type CreateProduct = {
+  id: number
   name: string
   price: number
   description: string
@@ -19,4 +20,21 @@ export type Product = {
   is_active: boolean
   category_id: number
   tag_ids: number[]
+}
+
+export type Product = {
+  name: string
+  price: number
+  description: string
+  image_url: string
+  min_age: number
+  gender: 'MALE' | 'FEMALE'
+  is_active: boolean
+  id: number
+  category: {
+    name: string
+    description: string
+    id: number
+  }
+  tags: string[]
 }
