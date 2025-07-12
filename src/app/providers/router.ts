@@ -8,13 +8,29 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth && !cookiesApi.isAuthenticated()) {
-    notifyError('Необходима авторизация!')
-    next('/login')
-  } else {
+router.beforeEach(async (to, from, next) => {
+  // Не проверяем авторизацию на /login вообще
+  if (to.path === '/login') {
     next()
+    return
   }
+  if (to.meta.requiresAuth) {
+    let user = cookiesApi.getUser()
+    let tries = 0
+    while (!user && tries < 5) {
+      await new Promise((res) => setTimeout(res, 100))
+      user = cookiesApi.getUser()
+      tries++
+    }
+    if (!user) {
+      if (!to.query.loggedOut) {
+        notifyError('Необходима авторизация!')
+      }
+      next({ path: '/login', query: { loggedOut: '1' } })
+      return
+    }
+  }
+  next()
 })
 
 export default router
