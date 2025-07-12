@@ -14,8 +14,11 @@ import { RouterView } from 'vue-router'
 
 <style lang="scss">
 .main {
-  height: calc(100vh - 64px);
+  height: 100%;
   margin-top: 64px;
   padding: 2rem;
+  background-color: rgb(238, 248, 240);
+  display: flex;
+  flex-direction: column;
 }
 </style>
