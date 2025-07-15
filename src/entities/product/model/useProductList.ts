@@ -1,19 +1,37 @@
+import { computed, unref, watch } from 'vue'
+import type { ComputedRef } from 'vue'
 import { useQuery } from '@tanstack/vue-query'
-import type { Product, ProductListParams } from './types'
 import { getAllProducts } from '../api/getAllProducts'
+import type { Product } from './types'
 
-export const useProductList = () => {
-  const options = {}
+interface ProductListResponse {
+  products: Product[]
+  total: number
+}
 
-  const { data: products } = useQuery<Product[]>({
-    queryKey: ['allProducts', options],
-    queryFn: ({ queryKey }) => {
-      const [, params] = queryKey as [string, Partial<ProductListParams>]
-      return getAllProducts(params)
-    },
+export function useProductList(
+  params: ComputedRef<{ skip: number; limit: number; currentPage: number }>,
+) {
+  const {
+    data: response,
+    refetch,
+    isFetching,
+  } = useQuery<ProductListResponse>({
+    queryKey: ['allProducts', unref(params)],
+    queryFn: () => getAllProducts(unref(params)),
+  })
+
+  const products = computed(() => response.value?.products ?? [])
+  const total = computed(() => response.value?.total ?? 0)
+
+  watch(params, () => {
+    refetch()
   })
 
   return {
     products,
+    total,
+    refetch,
+    isFetching,
   }
 }
