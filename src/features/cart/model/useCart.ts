@@ -3,11 +3,11 @@ import { clearCart } from '@/entities/cart/api/clearCart'
 import { confirmOrder } from '@/entities/cart/api/confirmOrder'
 import { getCart } from '@/entities/cart/api/getCart'
 import { removeFromCart } from '@/entities/cart/api/removeFromCart'
-import type { Cart } from '@/entities/cart/model/types'
+import type { Cart, CartProductExtended } from '@/entities/cart/model/types'
 import { useProductList } from '@/entities/product/model/useProductList'
 import { notifyError, notifySuccess } from '@/shared/lib/services/notification.service'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
-import { computed } from 'vue'
+import { computed, type ComputedRef } from 'vue'
 import { useRouter } from 'vue-router'
 
 export const useCart = () => {
@@ -44,6 +44,12 @@ export const useCart = () => {
     },
   })
 
+  const removeAllOfProductFromCart = (productId: number, quantity: number) => {
+    for (let i = 0; i < quantity; i++) {
+      removeFromCurrentCart(productId)
+    }
+  }
+
   const { mutate: clearCurrentCart } = useMutation({
     mutationFn: clearCart,
     onSuccess: () => {
@@ -62,6 +68,7 @@ export const useCart = () => {
     onSuccess: () => {
       notifySuccess('Вы успешно соверщили заказ!')
       queryClient.invalidateQueries({ queryKey: ['cart'] })
+      queryClient.invalidateQueries({ queryKey: ['allOrders'] })
     },
     onError: (error) => {
       const errorMessage = 'Ошибка при совершении заказа!'
@@ -78,9 +85,11 @@ export const useCart = () => {
 
   const cartItems = computed(() => cart.value?.items || [])
   const subtotal = computed(() =>
-    cartItemsWithProductInfo.value.reduce(
-      (sum, item) => sum + item.price * (item.quantity || 1),
-      0,
+    Math.round(
+      cartItemsWithProductInfo.value.reduce(
+        (sum, item) => sum + item.product.price * (item.quantity || 1),
+        0,
+      ),
     ),
   )
   const shipping = 200
@@ -92,7 +101,7 @@ export const useCart = () => {
       ),
   )
   const overall = computed(() => subtotal.value + shipping)
-  const cartItemsWithProductInfo = computed(() => {
+  const cartItemsWithProductInfo: ComputedRef<CartProductExtended[]> = computed(() => {
     if (!products || !cartItems.value) return []
 
     return cartItems.value.map((item) => ({
@@ -101,26 +110,10 @@ export const useCart = () => {
     }))
   })
 
-  const { mutate: updateQuantityOnServer } = useMutation({
-    mutationFn: async ({ productId, quantity }: { productId: number; quantity: number }) => {
-      await updateQuantity(productId, quantity)
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cart'] })
-    },
-  })
-
-  const updateQuantity = (productId: number, newQuantity: number) => {
-    if (!cart.value || !Array.isArray(cart.value.items)) return
-    const item = cart.value.items.find(
-      (i: { product_id: number; quantity: number }) => i.product_id === productId,
-    )
-    if (item) item.quantity = newQuantity
-  }
-
   return {
     cart,
     cartItemsWithProductInfo,
+    removeAllOfProductFromCart,
     removeFromCurrentCart,
     addToCurrentCart,
     clearCurrentCart,
