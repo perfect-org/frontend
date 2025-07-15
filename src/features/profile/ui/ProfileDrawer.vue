@@ -24,7 +24,7 @@
         class="compact-icon"
         color="success"
         @click="drawerProxy = false"
-        :to="{ path: 'catalog' }"
+        :to="{ path: '/catalog' }"
         exact
       ></v-list-item>
       <v-list-item
@@ -34,7 +34,17 @@
         class="compact-icon"
         color="success"
         @click="drawerProxy = false"
-        :to="{ path: 'cart' }"
+        :to="{ path: '/cart' }"
+        exact
+      ></v-list-item>
+      <v-list-item
+        prepend-icon="mdi-text-box-check"
+        title="Заказы"
+        value="orders"
+        class="compact-icon"
+        color="success"
+        @click="drawerProxy = false"
+        :to="{ path: '/orders' }"
         exact
       ></v-list-item>
       <v-list-item
@@ -44,7 +54,7 @@
         class="compact-icon"
         color="success"
         @click="drawerProxy = false"
-        :to="{ path: 'admin' }"
+        :to="{ path: '/admin' }"
         exact
       ></v-list-item>
     </v-list>
