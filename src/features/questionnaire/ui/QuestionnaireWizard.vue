@@ -46,10 +46,13 @@ import type { QuestionnaireAnswersObject } from '@/entities/questionnaire/model/
 const props = defineProps<{
   goals: Ref<any, any> | Ref<undefined, undefined>
   allergies: Ref<any, any> | Ref<undefined, undefined>
+  updateQuestionnaireResults: MutateSyncFunction<any, Error, QuestionnaireAnswersObject, unknown>
   sendQuestionnaireResults: MutateSyncFunction<any, Error, QuestionnaireAnswersObject, unknown>
+  userAnswers?: QuestionnaireAnswersObject
 }>()
 
-const { goals, allergies, sendQuestionnaireResults } = props
+const { goals, allergies, sendQuestionnaireResults, updateQuestionnaireResults, userAnswers } =
+  props
 
 const {
   currentIndex,
@@ -64,7 +67,7 @@ const {
   prevQuestion,
   getComponent,
   getComponentProps,
-} = useQuestionnaireWizard({ goals, allergies, sendQuestionnaireResults })
+} = useQuestionnaireWizard({ goals, allergies, sendQuestionnaireResults, userAnswers })
 </script>
 
 <style scoped lang="scss">

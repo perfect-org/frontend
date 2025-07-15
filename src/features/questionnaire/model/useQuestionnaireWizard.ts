@@ -1,4 +1,4 @@
-import { ref, computed, reactive, onMounted, type Ref } from 'vue'
+import { ref, computed, onMounted, type Ref, watch } from 'vue'
 import type {
   Question,
   QuestionComponentProps,
@@ -10,10 +10,11 @@ interface QuestionnaireWizardProps {
   goals: Ref<any, any> | Ref<undefined, undefined>
   allergies: Ref<any, any> | Ref<undefined, undefined>
   sendQuestionnaireResults: MutateSyncFunction<any, Error, QuestionnaireAnswersObject, unknown>
+  userAnswers?: QuestionnaireAnswersObject
 }
 
 export function useQuestionnaireWizard(props: QuestionnaireWizardProps) {
-  const { goals, allergies, sendQuestionnaireResults } = props
+  const { goals, allergies, sendQuestionnaireResults, userAnswers } = props
 
   onMounted(async () => {
     const goalQuestion = questions.value.find((q) => q.key === 'goal')
@@ -24,9 +25,19 @@ export function useQuestionnaireWizard(props: QuestionnaireWizardProps) {
   })
 
   const currentIndex = ref(0)
-  const answers = ref<QuestionnaireAnswersObject>({})
+  const answers = ref<QuestionnaireAnswersObject>(userAnswers ?? {})
   const slideDirection = ref<'left' | 'right'>('left')
   const questions = ref(questionsRaw)
+
+  watch(
+    () => props.userAnswers,
+    (newVal) => {
+      if (newVal) {
+        answers.value = { ...newVal }
+      }
+    },
+    { immediate: true },
+  )
 
   const currentQuestion = computed(() => questions.value[currentIndex.value])
   const isLast = computed(() => currentIndex.value === questions.value.length - 1)

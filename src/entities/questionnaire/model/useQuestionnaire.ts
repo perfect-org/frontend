@@ -1,4 +1,3 @@
-import { watch } from 'vue'
 import { getGoals } from '../api/getGoals'
 import { getAllergies } from '../api/getAllergies'
 import { sendQuestionnaire } from '../api/sendQuestionnaire'
@@ -6,6 +5,7 @@ import { useMutation, useQuery } from '@tanstack/vue-query'
 import { useRouter } from 'vue-router'
 import { notifyError, notifySuccess } from '@/shared/lib/services/notification.service'
 import { getQuestionnaire } from '../api/getQuestionnaire'
+import { updateQuestionnaire } from '../api/updateQuestionnaire'
 
 export const useQuestionnaire = () => {
   const router = useRouter()
@@ -41,24 +41,25 @@ export const useQuestionnaire = () => {
     },
   })
 
-  watch(
-    () => ({
-      questionnaire: questionnaire.value,
-      isError: isQuestionnaireError.value,
-      error: error.value,
-    }),
-    ({ questionnaire }) => {
-      console.log(questionnaire)
-      if (questionnaire) {
-        router.replace('/catalog')
-      }
+  const { mutate: updateQuestionnaireResults } = useMutation({
+    mutationFn: updateQuestionnaire,
+    onSuccess: () => {
+      notifySuccess(`Ваша анкета успешно обновлена!`)
     },
-    { immediate: true },
-  )
+    onError: (error) => {
+      const errorMessage = `Ошибка при обновлении анкеты!`
+      notifyError(errorMessage)
+      console.error(`${errorMessage}:`, error)
+    },
+  })
 
   return {
     goals,
     allergies,
     sendQuestionnaireResults,
+    updateQuestionnaireResults,
+    questionnaire,
+    isQuestionnaireError,
+    error,
   }
 }

@@ -12,9 +12,15 @@
 </template>
 
 <script setup lang="ts">
+import { defineProps } from 'vue'
 import QuestionnaireWizard from '@/features/questionnaire/ui/QuestionnaireWizard.vue'
 import { useQuestionnaire } from '../model/useQuestionnaire'
+import type { QuestionnaireAnswersObject } from '../model/types'
+
 const { goals, allergies, sendQuestionnaireResults } = useQuestionnaire()
+const props = defineProps<{
+  questionnaire: QuestionnaireAnswersObject
+}>()
 </script>
 
 <style lang="scss"></style>
