@@ -1,7 +1,13 @@
 import { LoginPage } from './login'
 import { RegisterPage } from './register'
 import { QuestionnairePage } from './questionnaire'
-import { CatalogPage } from './catalog'
+import CatalogPage from './catalog/CatalogPage.vue'
+import ShopLayout from '@/app/ui/ShopLayout.vue'
+import ProductPage from './catalog/product/ProductPage.vue'
+import ProfilePage from './profile/ProfilePage.vue'
+import CartPage from './cart/CartPage.vue'
+import AdminPage from './admin/AdminPage.vue'
+import OrderListPage from './orderList/OrderListPage.vue'
 
 export const routes = [
   {
@@ -23,10 +29,37 @@ export const routes = [
     meta: { layout: 'empty', requiresAuth: true },
   },
   {
-    path: '/catalog',
-    name: 'ProductCatalog',
-    component: CatalogPage,
+    path: '/',
+    component: ShopLayout,
     meta: { layout: 'empty', requiresAuth: true },
+    children: [
+      { path: 'catalog', component: CatalogPage },
+      {
+        path: '/catalog/product/:id',
+        component: ProductPage,
+        props: true,
+      },
+      {
+        path: 'profile',
+        component: ProfilePage,
+      },
+      {
+        path: 'cart',
+        component: CartPage,
+      },
+      {
+        path: 'cart',
+        component: CartPage,
+      },
+      {
+        path: 'orders',
+        component: OrderListPage,
+      },
+      {
+        path: 'admin',
+        component: AdminPage,
+      },
+    ],
   },
 ]
 
