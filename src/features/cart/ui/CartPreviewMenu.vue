@@ -17,12 +17,7 @@
           style="align-items: flex-start"
         >
           <div class="cart-item-photo-container">
-            <v-img
-              :src="item.product?.image_url || ''"
-              width="56"
-              height="56"
-              class="mr-4 cart-item-photo"
-            />
+            <ProductImage :image_url="item.product?.image_url || ''" />
           </div>
           <div
             class="flex-grow-1 d-flex flex-column justify-space-between"
@@ -49,7 +44,6 @@
           </div>
         </v-list-item>
       </v-list>
-
       <div v-else class="empty-cart">
         <v-list-item>
           <div class="d-flex flex-column align-center justify-center py-8">
@@ -61,7 +55,6 @@
           </div>
         </v-list-item>
       </div>
-
       <v-divider v-if="cartItemsWithProductInfo.length > 0"></v-divider>
       <v-card-actions v-if="cartItemsWithProductInfo.length > 0">
         <v-btn color="success" block @click="handleCheckout">Оформить заказ</v-btn>
@@ -70,7 +63,9 @@
         <v-btn text block :to="{ path: 'cart' }" exact>Открыть корзину</v-btn>
       </v-card-actions>
       <v-card-actions v-if="cartItemsWithProductInfo.length > 0">
-        <v-btn color="red-darken-1" text block>Удалить корзину</v-btn>
+        <v-btn color="red-darken-1" text block @click="removeFromCurrentCart(item.product)"
+          >Удалить корзину</v-btn
+        >
       </v-card-actions>
     </v-card>
   </v-menu>
@@ -80,6 +75,7 @@
 import { ref, computed } from 'vue'
 import { useCart } from '../model/useCart'
 import { useProductList } from '@/entities/product/model/useProductList'
+import ProductImage from '@/shared/ui/ProductImage.vue'
 
 const { products } = useProductList()
 const { cart, removeFromCurrentCart, checkout, viewCart } = useCart()
@@ -120,14 +116,8 @@ function handleViewCart() {
   width: 56px;
   height: 56px;
   margin-right: 10px;
-  .cart-item-photo {
-    border-radius: 8px;
-    background: #444;
-    min-width: 56px;
-    min-height: 56px;
-    max-width: 56px;
-    max-height: 56px;
-    object-fit: contain;
+  img {
+    border-radius: 18px;
   }
 }
 </style>
