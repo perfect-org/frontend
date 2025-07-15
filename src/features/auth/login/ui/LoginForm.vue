@@ -41,17 +41,40 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useLogin } from '../model/useLogin'
+import { useQuestionnaire } from '@/entities/questionnaire/model/useQuestionnaire'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 const email = ref('')
 const password = ref('')
 const loading = ref(false)
 const formRef = ref()
 
-const { mutate: login } = useLogin()
+const { mutate: login, isSuccess } = useLogin()
 const onLogin = () => {
   login({ username: email.value, password: password.value })
 }
+
+const { questionnaire, isQuestionnaireError, error } = useQuestionnaire()
+
+console.log('[LoginForm] isSuccess:', isSuccess.value)
+console.log('[LoginForm] questionnaire:', questionnaire.value)
+console.log('[LoginForm] isQuestionnaireError:', isQuestionnaireError.value)
+console.log('[LoginForm] error:', error.value)
+
+watch(isSuccess, (success) => {
+  if (success) {
+    if (questionnaire.value) {
+      console.log(questionnaire.value)
+      router.replace('/catalog')
+    } else {
+      console.log(questionnaire.value)
+      router.replace('/questionnaire')
+    }
+  }
+})
 </script>
 
 <style lang="scss">

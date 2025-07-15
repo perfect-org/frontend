@@ -28,7 +28,6 @@ export const useLogin = () => {
         refresh_token: tokens.refresh_token,
       })
       notifySuccess('Вы успешно вошли в систему!')
-      router.push('/questionnaire')
       getCurrentUserInfo()
     },
     onError: (error) => {

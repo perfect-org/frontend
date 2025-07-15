@@ -6,7 +6,7 @@ export const useLogout = () => {
 
   const logout = () => {
     cookiesApi.removeAuthCookies()
-    router.push('/login')
+    router.replace({ path: '/login', query: { loggedOut: '1' } })
   }
 
   return {

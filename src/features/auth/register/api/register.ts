@@ -11,7 +11,7 @@ export const registerApi = {
     email: string
     password: string
   }) => {
-    const response = await axiosInstance.post(`${API_URL}/auth/register`, {
+    const response = await axiosInstance.post(`${API_URL}/auth/`, {
       name,
       email,
       password,
